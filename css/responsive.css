@@ -1,0 +1,103 @@
+@media(min-width: 450px) {
+    #restaurant-img {
+        width: 100%;
+    }
+}
+
+/* card with 100% width, table at right and image at the left side..... */
+
+@media(min-width: 700px) {
+    .filter-select {
+        margin-right: 50%;
+    }
+    
+    #restaurant-card {
+        width: 100%;
+    }
+    
+    #restaurant-img {
+        width: 50%;
+    }
+    
+    #restaurant-cuisine {
+        margin-bottom: 0;
+    }
+    
+    #flex-content {
+        order: -1;
+        width: 50%;
+    }
+}
+
+/* restaurant card at left and map at right.....*/
+
+@media(min-width: 900px) {
+    #restaurants-list li {
+        width: 380px;
+    }
+    
+    #restaurant-card {
+        width: 100%;
+        order: 1;
+    }
+    
+    #restaurant-img {
+        float: none;
+        width: 100%;
+    }
+    
+    #restaurant-cuisine, 
+    #restaurant-address {
+        width: 100%;
+    }
+    
+    .inside #map-container {
+        width: 45%;
+        margin-right: 5%;
+        order: 2;
+        float: right;
+        margin-top: 80px;
+        height: 573px;
+        box-shadow: 3px 4px 15px rgba(85, 85, 85, 0.81);
+
+    }
+    
+    #restaurant-container h2 {
+        width: 100%;
+    }
+    
+    #flex-content {
+        width: 100%;
+        order: 1;
+    }
+    
+    #restaurant-container {
+        width: 45%;
+        margin-left: 5%;
+    }
+    
+    #restaurant-hours tr {
+        width: 100%;
+    }
+}
+
+@media(min-width: 1200px) {
+    #restaurants-list {
+        width: 80%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    #restaurants-list li {
+        width: 320px;
+        margin-bottom: 30px;
+    }
+    
+    #flex-content {
+        height: 253px
+    }
+    
+    .inside #map-container {
+        height: 580px;
+    }
+}
