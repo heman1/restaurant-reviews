@@ -5,7 +5,7 @@ self.addEventListener('install', function(e) {
   e.waitUntil(
       //adding the urls to cache
     caches.open(staticCacheName).then(function(cache) {
-      console.log('ServiceWorker is doing it\'s work');
+      console.log('sw is caching files');
       return cache.addAll(
           ['/',
            '/index.html',
@@ -13,8 +13,12 @@ self.addEventListener('install', function(e) {
            '/sw.js',
            '/img/',
            '/data/',
-           '/css/',
-           '/js/',
+           '/css/styles.css',
+           '/css/responsive.css',
+           '/js/dbhelper.js',
+           '/js/main.js',
+           '/js/restaurant_info.js',
+           '/manifest.json'
           ]); //including files that needs to be cached.
     })
   );
@@ -39,7 +43,9 @@ self.addEventListener('activate',  event => {
 //or responding with the network if available
 self.addEventListener('fetch' , event => {
   event.respondWith(
-    caches.match(event.request, {ignoreSearch : true}).then(function(response) {
+    caches.match(event.request, {
+        ignoreSearch : true
+    }).then(function(response) {
         return response || fetch(event.request);
     })
   );

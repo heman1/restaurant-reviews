@@ -1,0 +1,15 @@
+{
+  "name": "Restaurant Review Web App",
+  "short_name": "mws-rr",
+  "icons": [{
+      "src": "img/icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "index.html",
+  "gcm_sender_id": "",
+  "display": "standalone",
+  "background_color": "#3397DB",
+  "theme_color": "#3397DB"
+}

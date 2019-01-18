@@ -204,7 +204,7 @@ nav h1 a {
   background-color: #fff;
   box-shadow: 0px 6px 20px rgba(85, 85, 85, 0.81);
   font-family: Arial,sans-serif;
-  min-height: 380px;
+  min-height: 420px;
   text-align: left;
   margin: 15px auto 15px auto;
   width: 320px;
@@ -254,6 +254,40 @@ nav h1 a {
   background: #18255c;
 }
 
+/*
+** Favourite Star
+*/
+#fav {
+    display: inline;
+    margin: 0 20px;
+}
+.favourite, .favourite-true {
+    font-size: 30px;
+    margin: 0 83% 0 20px;
+    color: #777;
+}
+
+.favourite-true {
+    color: orange;
+}
+
+.favourite:hover, .favourite-true:hover {
+    cursor: pointer;
+    color: #f7b334;
+}
+
+.favourite:active,.favourite-true:active {
+    animation: big 1s linear 1;
+}
+
+@keyframes big {
+    from {
+        transform: scale(0.3);
+    }
+    to {
+        transform: scale(1.5);
+    }
+}
 /* ====================== Restaurant Details ====================== */
 
 .inside header {
@@ -287,7 +321,8 @@ nav h1 a {
   font-weight: 200;
   text-transform: uppercase;
   line-height: 1.1;
-  width: 100%;
+  margin: 0 0 12px 0;
+  padding-top: 7px;
 }
 
 #restaurant-img {
@@ -367,13 +402,18 @@ nav h1 a {
   padding: 10px 20px 20px;
   position: relative;
   box-shadow: 3px 4px 15px rgba(85, 85, 85, 0.81);
+  border-left: 4px solid #3397db;
+  transition: 0.3s ease-in;
+}
+
+#reviews-list li:hover {
+  box-shadow: none;
 }
 
 #reviews-list li p {
-  margin: 20px;
+  margin: 10px;
   font-size: 13pt;
   word-spacing: 6px;
-  font-weight: 500;
 }
 
 #restaurant-hours {
@@ -386,6 +426,177 @@ nav h1 a {
   color: #666;
   padding: 0 5px;
 }
+
+#add-review {
+    width: 90%;
+    height: 350px;
+    margin: 0 auto;
+}
+
+#add-review form {
+    max-width: 500px;
+    background: #fff;
+    box-shadow: 3px 4px 15px rgba(85, 85, 85, 0.81);
+    border-radius: 3px;
+    padding: 20px;
+}
+
+.rName {
+    width: 30%;
+    margin-right: 0;
+    display: inline-block;
+    font-weight: bold;
+}
+
+.rDate {
+    display: inline-block;
+    float: right;
+    width: 40%;
+    text-align: right;
+    font-weight: bold;
+}
+
+.star1::before{
+    content:'Rating: 🟊';
+    font-size: 1.2em;
+    color: orange;
+}
+
+.star1::after {
+    content: '🟊🟊🟊🟊';
+    font-size: 1.2em;
+    color: lightgray;
+}
+
+.star2::before{
+    content:'Rating: 🟊🟊';
+    font-size: 1.2em;
+    color: orange;
+}
+
+.star2::after {
+    content: '🟊🟊🟊';
+    font-size: 1.2em;
+    color: lightgray;
+}
+
+.star3::before{
+    content:'Rating: 🟊🟊🟊';
+    font-size: 1.2em;
+    color: orange;
+}
+
+.star3::after {
+    content: '🟊🟊';
+    font-size: 1.2em;
+    color: lightgray;
+}
+
+.star4::before{
+    content:'Rating: 🟊🟊🟊🟊';
+    font-size: 1.2em;
+    color: orange;
+}
+
+.star4::after {
+    content: '🟊';
+    font-size: 1.2em;
+    color: lightgray;
+}
+
+.star5::before{
+    content:'Rating: 🟊🟊🟊🟊🟊';
+    font-size: 1.2em;
+    color: orange;
+}
+
+.fName,.fRate,.fComment,.fBtn{
+    margin: 15px;
+    font-size: 14px;
+}
+
+.fName input,.fComment textarea{
+    border: none;
+    border-bottom: 2px solid #ddd;
+    font-family: sans-serif;
+    font-size: 14px;
+    font-weight: lighter;
+}
+
+textarea {
+    box-sizing: border-box;
+    width: 90%;
+}
+
+.fBtn{
+    padding: 12px 18px;
+    border: none;
+    background: #3397db;
+    color: #fff;
+    box-shadow: 0px 6px 12px 0px #484343c4;
+    transition: 0.3s ease-out;
+}
+
+.fBtn:hover {
+    box-shadow: 0px 1px 4px 0px #484343c4;
+    cursor: pointer;
+}
+
+.getRate {
+    width: 50px;
+    border: none;
+    border-bottom: 2px solid lightgray;
+}
+
+/*=======pop-up==========*/
+.alert {
+  opacity: 1;
+  visibility: hidden;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  font-family: sans-serif;
+  font-size: 1em;
+  max-width: 20em;
+  background-color: #fff;
+  border-radius: 0.2em;
+  margin: 1em;
+  padding: 0.5em;
+  box-shadow: 0 0.1em 0.4em -0.1em #616161;
+  z-index: 1001;
+  transition: visibility 0.5s,transform 0.5s ease-in-out,opacity 0.5s ease-in;
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  direction:ltr;
+}
+
+.content i {
+  font-style: unset;
+  margin: 0.25em;
+}
+
+.star {
+  font-size: 26px;
+  color: orange;
+}
+
+.context {
+    color: #7f8c8d;
+    padding: 0.5em;
+    text-align: justify;
+    line-height: 1.45em;
+}
+
+.hide {
+  transform: translateY(3em);
+  visibility: hidden;
+  opacity: 0;
+}
+
 /*=======accessebility functions=======*/
+
 
 

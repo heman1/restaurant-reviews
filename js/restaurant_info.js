@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 initMap = () => {
   fetchRestaurantFromURL((error, restaurant) => {
     if (error) { // Got an error!
-      console.error(error);
+      console.error(`url is ${restaurant}error at initmap : ${error}`);
     } else {      
       self.newMap = L.map('map', {
         center: [restaurant.latlng.lat, restaurant.latlng.lng],
@@ -63,7 +63,8 @@ fetchRestaurantFromURL = (callback) => {
   if (!id) { // no id found in URL
     error = 'No restaurant id in URL'
     callback(error, null);
-  } else {
+  } 
+  else {
     DBHelper.fetchRestaurantById(id, (error, restaurant) => {
       self.restaurant = restaurant;
       if (!restaurant) {
@@ -93,15 +94,81 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
 
   const cuisine = document.getElementById('restaurant-cuisine');
   cuisine.innerHTML = restaurant.cuisine_type;
-
+    
+  // favourite marker
+  const fav = document.getElementById('fav');
+  fav.innerHTML = '🟊'; //character for star (may not appear on your editor)
+  fav.setAttribute('name', restaurant.id);
+  fav.setAttribute('role', 'button');
+  fav.setAttribute('aria-label', 'favourite button');
+  if(restaurant.is_favorite === 'true') {
+        fav.classList.add('favourite-true');
+        fav.setAttribute('aria-pressed', 'true');
+  }
+  else {
+        fav.classList.remove('favourite-true');
+        fav.classList.add('favourite');
+        fav.setAttribute('aria-pressed', 'false');
+  }
+  
+  fav.addEventListener('click', (e)=> {
+      changeState();
+  });
+  fav.onkeypress = function(e){
+      if(e.keyCode===13)
+        changeState();
+      else
+        return;
+  };
+  function changeState() {
+      if (fav.classList.contains('favourite-true')) {
+          fav.classList.remove('favourite-true');
+          fav.classList.add('favourite');
+          fav.setAttribute('aria-pressed', 'false');
+          DBHelper.updateFavourite(restaurant.id, 'false');
+          popup('false');
+      }
+      else {
+          fav.classList.remove('favourite');
+          fav.classList.add('favourite-true');
+          fav.setAttribute('aria-pressed', 'true');
+          DBHelper.updateFavourite(restaurant.id, 'true');
+          popup('true');
+      }
+  }
   // fill operating hours
   if (restaurant.operating_hours) {
     fillRestaurantHoursHTML();
   }
   // fill reviews
-  fillReviewsHTML();
+  DBHelper.fetchRestaurantReviews(restaurant.id, fillReviewsHTML);
+  //fillReviewsHTML();
 }
-
+/*
+** popup
+*/
+popup = (value)=> {
+    console.log('inside popup');
+    pop = document.getElementsByClassName('alert')[0];
+    context = document.getElementsByClassName('context')[0];
+    star = document.getElementsByClassName('star')[0];
+    pop.style.visibility = 'visible';
+    pop.classList.remove('hide');
+    if(value==='true') {
+        console.log("marked as favourite");
+        context.innerHTML = 'Marked as favourite';
+        star.innerHTML = '🟊';
+    }
+    else {
+        console.log("removed from favourite");
+        context.innerHTML = 'Removed from favourite';
+        star.innerHTML = '&#9888;';
+    }
+    window.setTimeout(function(){
+        pop.classList.add('hide');
+    }, 2000);
+    
+}
 /**
  * Create restaurant operating hours HTML table and add it to the webpage.
  */
@@ -125,7 +192,12 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
 /**
  * Create all reviews HTML and add them to the webpage.
  */
-fillReviewsHTML = (reviews = self.restaurant.reviews) => {
+fillReviewsHTML = (error, reviews) => {
+  //self.restaurant.reviews = reviews;
+  if(error)
+      console.log("error in getting reviews "+error);
+  else {
+  console.log('infojs reviews '+reviews);
   const container = document.getElementById('reviews-container');
   const title = document.createElement('h2');
   title.innerHTML = 'Reviews';
@@ -145,6 +217,7 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
    
   /* calling function to give tabIndexes to elements */
   updateTabindex2();
+  }
 }
 
 /**
@@ -153,15 +226,19 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
 createReviewHTML = (review) => {
   const li = document.createElement('li');
   const name = document.createElement('p');
+  name.classList.add('rName');
   name.innerHTML = review.name;
   li.appendChild(name);
 
   const date = document.createElement('p');
-  date.innerHTML = review.date;
+  date.classList.add('rDate');
+  const createdDate = new Date(review.createdAt).toLocaleDateString();
+  date.innerHTML = `Made on ${createdDate}`;
   li.appendChild(date);
 
   const rating = document.createElement('p');
-  rating.innerHTML = `Rating: ${review.rating}`;
+  rating.classList.add('star'+review.rating);
+  rating.title = 'Rating '+review.rating;
   li.appendChild(rating);
 
   const comments = document.createElement('p');
@@ -169,6 +246,32 @@ createReviewHTML = (review) => {
   li.appendChild(comments);
     
   return li;
+}
+ 
+/* creates add review form */
+addReview = () => {
+    const name = document.querySelector('.getName').value;
+    const rate = document.querySelector('.getRate').value;
+    const comment = document.querySelector('.getComment').value;
+    console.log(name+" "+rate+" "+comment);
+    
+    const reviewObj = {
+        restaurant_id: parseInt(self.restaurant.id),
+        rating: parseInt(rate),
+        name: name,
+        comments: comment,
+        createdAt: new Date()
+    }
+    const ul = document.getElementById('reviews-list');
+    ul.appendChild(createReviewHTML(reviewObj));
+    DBHelper.createNewReview(self.restaurant.id, name, rate, comment, (error, review)=> {
+        if(error)
+            console.log('error in adding review');
+        else {
+            console.log('review added');
+            window.location.href = `restaurant.html?id=${self.restaurant.id}`;
+        }
+    });
 }
 
 /* function to assighn tabindexes */
@@ -196,7 +299,7 @@ fillBreadcrumb = (restaurant=self.restaurant) => {
   const breadcrumb = document.getElementById('breadcrumb');
   const li = document.createElement('li');
   li.innerHTML = restaurant.name;
-  breadcrumb.appendChild(li);
+  breadcrumb.append(li);
 }
 
 /**
