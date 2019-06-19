@@ -16,3 +16,4 @@
 * download the server
 * run ```node server``` on the server directory
 * run ```python -m http.server 1337``` on the client directory
+* visit ```127.0.0.1:1337``` on your browser.
